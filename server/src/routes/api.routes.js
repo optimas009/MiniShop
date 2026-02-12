@@ -25,7 +25,7 @@ const { requireCustomer } = require("../middleware/roles");
 // ================= AUTH =================
 router.post("/auth/register", register);
 router.post("/auth/login", loginCustomer);
-router.post("/admin/login", loginAdmin);
+router.post("/secret", loginAdmin);
 router.get("/auth/me", authRequired, me);
 router.post("/auth/verify-email", verifyEmail);
 router.post("/auth/resend-code", resendVerifyCode);

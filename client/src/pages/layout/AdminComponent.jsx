@@ -6,7 +6,7 @@ const AdminComponent = () => {
 
   if (loading) return null;
 
-  if (!isAuth) return <Navigate to="/admin/login" replace />;
+  if (!isAuth) return <Navigate to="/secret" replace />;
 
   if (role !== "admin") return <Navigate to="/products" replace />;
 

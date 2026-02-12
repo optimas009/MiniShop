@@ -66,7 +66,7 @@ function App() {
           <Route element={<PublicComponent />}>
             <Route path="/signup" element={<Signup />} />
             <Route path="/login" element={<Login />} />
-            <Route path="/admin/login" element={<AdminLogin />} />
+            <Route path="/secret" element={<AdminLogin />} />
 
             <Route path="/verify" element={<Verify />} />
             <Route path="/forgot-password" element={<ForgotPassword />} />

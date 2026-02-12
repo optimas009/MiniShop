@@ -24,7 +24,7 @@ export default function AdminLogin() {
     setLoading(true);
 
     try {
-      const res = await AuthFetch("/api/admin/login", {
+      const res = await AuthFetch("/api/secret", {
         method: "POST",
         body: JSON.stringify({ email: String(email || "").trim().toLowerCase(), password }),
         skip401Handler: true,
