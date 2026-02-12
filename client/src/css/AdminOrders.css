@@ -1,0 +1,471 @@
+/* ===== Admin Orders ===== */
+
+.ao-page {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 26px 18px;
+}
+
+.ao-header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 14px;
+  margin-bottom: 14px;
+}
+
+.ao-title {
+  margin: 0;
+  font-size: 34px;
+  font-weight: 950;
+  color: #0f172a;
+}
+
+.ao-subtitle {
+  margin: 6px 0 0;
+  font-size: 14px;
+  color: #64748b;
+  font-weight: 650;
+}
+
+.ao-controls {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.ao-select {
+  border: 1px solid #e2e8f0;
+  background: #fff;
+  border-radius: 12px;
+  padding: 10px 12px;
+  font-weight: 950;
+  color: #0f172a;
+  outline: none;
+  min-width: 140px;
+}
+
+.ao-select:focus {
+  border-color: #2563eb;
+  box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.15);
+}
+
+.ao-btn {
+  border: 1px solid #e2e8f0;
+  background: #fff;
+  color: #0f172a;
+  padding: 10px 14px;
+  border-radius: 12px;
+  font-weight: 950;
+  cursor: pointer;
+  transition: transform 0.12s ease, box-shadow 0.12s ease;
+}
+
+.ao-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 12px 22px rgba(2, 8, 23, 0.08);
+}
+
+.ao-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+.ao-btnPrimary {
+  background: #2563eb;
+  border-color: #2563eb;
+  color: #fff;
+}
+
+.ao-btnPrimary:hover {
+  box-shadow: 0 14px 26px rgba(37, 99, 235, 0.22);
+}
+
+.ao-muted {
+  color: #64748b;
+  font-weight: 900;
+}
+
+.ao-banner {
+  border-radius: 12px;
+  padding: 10px 12px;
+  font-weight: 950;
+  margin: 12px 0 16px;
+  border: 1px solid transparent;
+}
+
+.ao-bannerError {
+  background: #ffe3e3;
+  color: #c92a2a;
+  border-color: #ffa8a8;
+}
+
+/* list */
+.ao-list {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 14px;
+  margin-top: 14px;
+}
+
+/* card */
+.ao-card {
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  border-radius: 18px;
+  padding: 16px;
+  box-shadow: 0 10px 20px rgba(2, 8, 23, 0.06);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.ao-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 16px 30px rgba(2, 8, 23, 0.10);
+}
+
+/* top row */
+.ao-topRow {
+  display: flex;
+  justify-content: space-between;
+  gap: 14px;
+  align-items: flex-start;
+}
+
+.ao-kicker {
+  font-size: 12px;
+  font-weight: 950;
+  color: #64748b;
+  letter-spacing: 0.3px;
+  margin-bottom: 6px;
+}
+
+.ao-leftTop {
+  min-width: 0;
+}
+
+.ao-idChip {
+  display: inline-flex;
+  align-items: center;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  font-size: 13px;
+  font-weight: 950;
+  color: #1d4ed8;
+  background: #eef2ff;
+  border: 1px solid #dbe4ff;
+  padding: 7px 10px;
+  border-radius: 12px;
+  word-break: break-all;
+}
+
+.ao-rightTop {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+/* status + payment pills */
+.ao-pill {
+  display: inline-flex;
+  align-items: center;
+  font-size: 12px;
+  font-weight: 950;
+  padding: 7px 10px;
+  border-radius: 999px;
+  border: 1px solid transparent;
+  white-space: nowrap;
+}
+
+/* Delivery status */
+.status-pending {
+  background: #fff3bf;
+  border-color: #ffe066;
+  color: #e67700;
+}
+.status-shipped {
+  background: #e7f5ff;
+  border-color: #a5d8ff;
+  color: #1c7ed6;
+}
+.status-delivered {
+  background: #e6fcf5;
+  border-color: #c3fae8;
+  color: #099268;
+}
+.status-cancelled {
+  background: #ffe3e3;
+  border-color: #ffa8a8;
+  color: #c92a2a;
+}
+.status-unknown {
+  background: #f1f5f9;
+  border-color: #e2e8f0;
+  color: #334155;
+}
+
+/* Payment */
+.pay-paid {
+  background: #e6fcf5;
+  border-color: #c3fae8;
+  color: #099268;
+}
+.pay-pending {
+  background: #fff3bf;
+  border-color: #ffe066;
+  color: #e67700;
+}
+.pay-failed {
+  background: #ffe3e3;
+  border-color: #ffa8a8;
+  color: #c92a2a;
+}
+.pay-refunded {
+  background: #f1f5f9;
+  border-color: #e2e8f0;
+  color: #334155;
+}
+
+/* Total chip */
+.ao-totalChip {
+  font-size: 13px;
+  font-weight: 950;
+  color: #0f172a;
+  background: #e6fcf5;
+  border: 1px solid #c3fae8;
+  padding: 7px 10px;
+  border-radius: 12px;
+}
+
+/* middle section */
+.ao-mid {
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px dashed #e2e8f0;
+  display: grid;
+  gap: 8px;
+}
+
+.ao-midRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  color: #334155;
+  font-weight: 750;
+}
+
+.ao-strongText {
+  color: #0f172a;
+  font-weight: 950;
+}
+
+.ao-userEmail {
+  color: #64748b;
+  font-weight: 900;
+}
+
+.ao-payMeta {
+  color: #64748b;
+  font-weight: 900;
+}
+
+/* refund chip */
+.ao-refundChip {
+  display: inline-flex;
+  align-items: center;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  font-size: 13px;
+  font-weight: 950;
+  color: #7c3aed;
+  background: #f3e8ff;
+  border: 1px solid #e9d5ff;
+  padding: 7px 10px;
+  border-radius: 12px;
+  word-break: break-all;
+}
+
+/* items */
+.ao-items {
+  margin-top: 12px;
+  border-top: 1px dashed #e2e8f0;
+  padding-top: 12px;
+  display: grid;
+  gap: 10px;
+}
+
+.ao-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 12px;
+  border: 1px solid #eef2ff;
+  background: #f8fafc;
+  border-radius: 14px;
+}
+
+.ao-itemName {
+  font-weight: 950;
+  color: #0f172a;
+}
+
+.ao-itemRight {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 6px;
+  font-weight: 950;
+}
+
+.ao-itemPrice {
+  color: #2563eb;
+  font-size: 14px;
+}
+
+.ao-itemTimes {
+  color: #64748b;
+  font-weight: 950;
+}
+
+.ao-itemQty {
+  color: #0f172a;
+  font-size: 14px;
+}
+
+/* actions */
+.ao-actions {
+  margin-top: 14px;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.ao-empty {
+  padding: 18px;
+  text-align: center;
+  color: #64748b;
+  font-weight: 950;
+  border: 1px dashed #cbd5e1;
+  border-radius: 16px;
+  background: #f8fafc;
+}
+
+/* responsive */
+@media (max-width: 760px) {
+  .ao-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .ao-controls {
+    width: 100%;
+  }
+
+  .ao-btn,
+  .ao-select {
+    width: 100%;
+  }
+
+  .ao-topRow {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .ao-actions {
+    justify-content: flex-start;
+  }
+}
+
+/* ===== Confirm Modal (AdminOrders) ===== */
+.ao-modalOverlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(2, 8, 23, 0.55);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 18px;
+  z-index: 9999;
+}
+
+.ao-modalCard {
+  width: min(520px, 100%);
+  background: #fff;
+  border-radius: 18px;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 30px 70px rgba(2, 8, 23, 0.35);
+  overflow: hidden;
+  animation: aoModalIn 0.16s ease-out;
+}
+
+@keyframes aoModalIn {
+  from {
+    transform: translateY(10px) scale(0.98);
+    opacity: 0.85;
+  }
+  to {
+    transform: translateY(0) scale(1);
+    opacity: 1;
+  }
+}
+
+.ao-modalHead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 14px 16px;
+  background: #f8fafc;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.ao-modalTitle {
+  font-size: 16px;
+  font-weight: 950;
+  color: #0f172a;
+}
+
+.ao-modalX {
+  border: 1px solid #e2e8f0;
+  background: #fff;
+  width: 34px;
+  height: 34px;
+  border-radius: 10px;
+  font-weight: 950;
+  cursor: pointer;
+}
+
+.ao-modalX:hover {
+  box-shadow: 0 10px 18px rgba(2, 8, 23, 0.08);
+  transform: translateY(-1px);
+}
+
+.ao-modalBody {
+  padding: 16px;
+}
+
+.ao-modalMsg {
+  font-weight: 850;
+  color: #334155;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  padding: 12px;
+  border-radius: 14px;
+}
+
+.ao-modalFoot {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  padding: 14px 16px;
+  border-top: 1px solid #e2e8f0;
+  background: #fff;
+}
+
+/* optional danger button */
+.ao-btnDanger {
+  background: #fff1f2;
+  border-color: #fecdd3;
+  color: #be123c;
+}
