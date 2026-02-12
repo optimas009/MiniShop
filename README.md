@@ -1,5 +1,5 @@
 
-[![LIVE DEMONSTRATION](https://img.shields.io/badge/LIVE%20DEMONSTRATION-CLICK%20HERE-brightgreen?style=for-the-badge)](https://mini-shop-vite.vercel.app/)
+# [![LIVE DEMONSTRATION](https://img.shields.io/badge/LIVE%20DEMONSTRATION-CLICK%20HERE-brightgreen?style=for-the-badge)](https://mini-shop-vite.vercel.app/)
 
 # 🛍️ MiniShop  
 **Full-Stack MERN E-Commerce Platform with Smart Cart & Order Management**
@@ -10,7 +10,11 @@ Users can place orders, cancel pending orders will give an automatic refund ID a
 
 ---
 
-# 🌍 Live Deployment
+## 🌍 Live Deployment
+
+### ⚠️ Note: Backend is hosted on Render (Free Tier). 
+If inactive, it may take **up to 60 seconds** to respond due to cold start. Please Wait...
+
 
 **Frontend (Vercel):**  
 https://mini-shop-vite.vercel.app/
@@ -18,7 +22,32 @@ https://mini-shop-vite.vercel.app/
 **Backend API (Render):**  
 https://minishop-lcep.onrender.com/api/health
 
+<br><br>
+
+## 🚀 Sign up to access all features, or use the demo login below. 🚀
+
+
+
+### 👑 Admin Login
+
+To login as Admin go to this route 
+
+https://mini-shop-vite.vercel.app/secret
+
+## Credentials
+- Email: shamstahmid19@gmail.com
+- Password: Admin1234@
+
+
+
+### 👤 Normal User Login
+
+## Credentials
+
+- Email: tahmidshams009@gmail.com
+- Password: Ase1234@
 ---
+<br><br>
 
 # 🧱 Tech Stack
 
@@ -280,8 +309,41 @@ Available = stock - reserved
 - View all orders
 - Update order status (Shipped / Delivered)
 - Secure admin-only routes
+- 
+<br><br>
 
----
+# 📁 Project Structure
+
+```plaintext
+
+MINISHOP/
+├── client/                                  # 🎨 Frontend (React + Vite)
+│   ├── src/                                 
+│   │   ├── css/                             # Styling files
+│   │   ├── pages/                           # Route-based pages
+│   │   ├── services/                        # AuthFetch and AuthContext                  
+│   │   ├── App.jsx                          # Main app component (routes setup)
+│   │   └── main.jsx                         # React entry point
+│   ├── vite.config.js                       # Vite configuration
+│   └── package.json                         # Frontend dependencies
+│
+├── server/                                  # 🚀 Backend (Express API)
+│   ├── src/                                 
+│   │   ├── config/                          # Database & environment configuration
+│   │   ├── controllers/                     # Handle HTTP requests
+│   │   ├── routes/                          # API endpoints
+│   │   ├── helpers/                         # helpers (password, hashotp, generateotp)
+│   ├   ├── jobs/                            # Expires carts & releases stock
+│   │   ├── services/                        # Business logic
+│   │   ├── models/                          # MongoDB schemas
+│   │   ├── middleware/                      # Authentication & authorization
+│   │   ├── utils/                           # luhn.js (validates credit card numbers using Luhn algorithm)
+│   │   └── index.js                         # Server entry point
+│   └── package.json                         # Backend dependencies
+│
+└── README.md                                # Project documentation
+
+```
 
 <hr> <div align="center"> 
 <h2>Thank You</h2> <p>Thanks for taking the time to explore this project</p> </div>
