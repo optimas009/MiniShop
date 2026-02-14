@@ -15,6 +15,8 @@ Users can place orders, cancel pending orders will give an automatic refund ID a
 ### ⚠️ Note: Backend is hosted on Render (Free Tier). 
 If inactive, it may take **up to 60 seconds** to respond due to cold start. Please Wait...
 
+GO->https://mini-shop-vite.vercel.app/
+
 
 **Frontend (Vercel):**  
 https://mini-shop-vite.vercel.app/
