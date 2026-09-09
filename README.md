@@ -1,353 +1,364 @@
-
 # [![LIVE DEMONSTRATION](https://img.shields.io/badge/LIVE%20DEMONSTRATION-CLICK%20HERE-brightgreen?style=for-the-badge)](https://mini-shop-vite.vercel.app/)
 
-# 🛍️ MiniShop  
-**Full-Stack MERN E-Commerce Platform with Smart Cart & Order Management**
+# 🛍️ MiniShop
 
-MiniShop is a full-stack e-commerce web application built with React (Vite), Node.js, Express, and MongoDB. It includes secure JWT authentication, Email Verification, cart stock reservation with automatic expiry, transactional order processing, and role-based access control.
+**Full-Stack MERN E-Commerce Platform with Smart Cart, Cloudinary Product Media & Order Management**
 
-Users can place orders, cancel pending orders will give an automatic refund ID and also stock updated back, and track their purchases. Admins can add, update products and update order statuses (shipped, delivered). 
+MiniShop is a full-stack e-commerce application built with React, Vite, Node.js, Express, and MongoDB Atlas. It includes JWT authentication, email verification, Cloudinary product images, stock reservation, cart expiry, transactional checkout, order tracking, simulated card payments, Cash on Delivery, refunds, and role-based admin management.
 
 ---
 
 ## 🌍 Live Deployment
 
-### ⚠️ Note: Backend is hosted on Render (Free Tier). 
-If inactive, it may take **up to 60 seconds** to respond due to cold start. Please Wait...
-
-GO->https://mini-shop-vite.vercel.app/
-
-
-**Frontend (Vercel):**  
+**Frontend:**  
 https://mini-shop-vite.vercel.app/
 
-**Backend API (Render):**  
-https://minishop-lcep.onrender.com/api/health
+**Backend API:**  
+https://mini-shop-backend-ten.vercel.app/
 
-<br><br>
+**Health Check:**  
+https://mini-shop-backend-ten.vercel.app/api/health
 
-## 🚀 Sign up to access all features, or use the demo login below. 🚀
-
-
-
-### 👑 Admin Login
-
-To login as Admin go to this route 
-
+**Admin Login Route:**  
 https://mini-shop-vite.vercel.app/secret
 
-## Credentials
-- Email: shamstahmid19@gmail.com
-- Password: Admin1234@
-
-
-
-### 👤 Normal User Login
-
-## Credentials
-
-- Email: tahmidshams009@gmail.com
-- Password: Ase1234@
----
-<br><br>
-
-# 🧱 Tech Stack
-
-| Layer          | Technology |
-|---------------|------------|
-| Frontend      | React.js (Vite), CSS |
-| Backend       | Node.js, Express.js |
-| Database      | MongoDB Atlas |
-| Authentication| JWT (JSON Web Tokens) |
-| Security      | bcrypt.js |
-| Email Service | Nodemailer + Brevo API |
-| Hosting (FE)  | Vercel |
-| Hosting (BE)  | Render |
-
----
----
 ---
 
-### 🚀 Installation Guide
+## ✨ Core Features
 
----
+### 👤 Authentication
+- Customer registration and login
+- Admin login
+- JWT authentication
+- Email verification with OTP
+- Forgot/reset password flow
+- Role-based access control
 
-### 1️⃣ Clone the Repository
-- Clone the MiniShop repository from GitHub
-- Navigate into the project root directory
-  - `git clone https://github.com/optimas009/MiniShop.git`
-  - `cd MiniShop`
+### 🛍️ Product Store
+- Responsive storefront
+- Product search
+- Category filtering
+- Sorting
+- Featured products
+- Dedicated product detail pages
+- Multiple product images
+- Cloudinary image storage
+- Product image gallery
+- Responsive image handling without cropping
 
----
+### 🛒 Smart Cart
+- Stock reservation when items are added
+- Prevents overselling
+- Cart expiry controlled by `CART_TTL_MIN`
+- Reserved stock is released on expiry, removal, clear cart, cancellation, or checkout
+- Available stock is calculated as:
 
-### 2️⃣ Backend Setup
-- Move into the `server` directory
-- Install backend dependencies
-- Start the Express server
-  - `cd server`
-  - `npm install`
-  - `npm run dev`   (for development with nodemon)
-  - `npm start`     (for production mode)
-
----
-
-### 3️⃣ Frontend Setup
-- Move into the `client` directory
-- Install frontend dependencies
-- Start the React development server
-  - `cd client`
-  - `npm install`
-  - `npm run dev`
-
----
-
-### 4️⃣ Environment Variables
-
-#### 📌 Backend (`/server/.env`)
-- Create a `.env` file inside the `server` folder
-- Configure the following variables:
-
-  - `PORT=5000`
-  - `MONGODB_URI=your_mongodb atlas_connection_string`
-  - `JWT_SECRET=your_secret_key`
-  - `JWT_EXPIRES_IN=1h`
-  - `CLIENT_URL=http://localhost:5173`
-  - `APP_BASE_URL=http://localhost:5000`
-  - `CART_TTL_MIN=10`
-  - `BREVO_API_KEY=your_brevo_api_key`
-  - `EMAIL_FROM=your_verified_email (has to be Brevo Verified)`
-
----
-
-#### 📌 Frontend (`/client/.env`)
-- Create a `.env` file inside the `client` folder
-- Configure:
-
-  - `VITE_API_URL=http://localhost:5000`
-
----
-
-### 5️⃣ Run the Application
-- Backend should be running on:
-  - `http://localhost:5000`
-- Frontend should be running on:
-  - `http://localhost:5173`
-
-Make sure MongoDB Atlas is connected and environment variables are properly configured before starting the server.
-
----
----
----
-
-# 🗄️ Database Schema (ER Overview)
-
-## 👤 User
-- _id
-- name
-- email
-- passwordHash
-- role (admin/customer)
-- isVerified
-- emailVerifyCode
-- emailVerifyExpires
-- resetPasswordCode
-- resetPasswordExpires
-- cancelMonth
-- cancelCount (monthly cancellation limit)
-- createdAt
-- updatedAt
-
----
-
-## 📦 Product
-- _id
-- name
-- price
-- description
-- stock
-- reserved
-- createdAt
-- updatedAt
-
----
-
-## 🛒 Cart
-- _id
-- user (ref User, unique)
-- items[]:
-  - product (ref Product)
-  - qty
-  - priceSnapshot
-- status (active, expired, checked_out)
-- expiresAt
-- createdAt
-- updatedAt
-
----
-
-## 📑 Order
-- _id
-- user (ref User)
-- items[]:
-  - product (ref Product)
-  - nameSnapshot
-  - priceSnapshot
-  - qty
-- total
-- paymentMethod (card_sim, cod)
-- paymentStatus (unpaid, pending, paid, failed, refunded)
-- refundId
-- refundedAt
-- status (pending, shipped, delivered, cancelled)
-- cancelledAt
-- shippedAt
-- deliveredAt
-- createdAt
-- updatedAt
-
----
----
----
-## 🏗️ Key Architectural Decisions
-
-- **Stock Reservation (Reserved Field)**
-  - When a user adds a product to the cart, the system increases `Product.reserved` using an atomic MongoDB update.
-  - This prevents overselling by ensuring available stock is calculated as:
-    - `available = stock - reserved`
-  - Stock is only deducted from `Product.stock` during checkout.
-
-- **Snapshot Strategy for Cart & Orders**
-  - Cart stores `priceSnapshot` so pricing stays consistent during the cart session.
-  - Order stores `nameSnapshot` and `priceSnapshot` so order history remains correct even if the product changes later or gets deleted.
-
-- **Transactional Checkout**
-  - Checkout runs inside a MongoDB transaction to ensure:
-    - Product stock/reserved updates and order creation happen together,
-    - No partial checkout states happen during concurrent purchases.
-
-- **Cart Expiry + Auto Release**
-  - Each cart has `expiresAt` and a background job clears expired carts.
-  - On expiry, reserved quantities are released automatically to keep inventory accurate.
-
-- **Role-Based Access Control (RBAC)**
-  - Users are `customer` by default; admins have `admin` role.
-  - Admin-only operations include product management and updating order status (shipped/delivered).
-
-- **Abuse Prevention: Monthly Cancellation Limit**
-  - Users can cancel only up to **5 orders per month**.
-  - Cancellation counter resets automatically when the month changes.
-
-
----
-
-## 📌 Assumptions Made
-
-- **Single-store model**
-  - Only one seller/admin manages all products (no multi-vendor support).
-
-- **Payment is simulated**
-  - `card_sim` and refund logic are treated as simulation (no real payment gateway like Stripe is integrated yet).
-
-- **Cart is one-per-user**
-  - Each user has a single cart document (`user` is unique in `Cart` model).
-
-- **Email verification is required**
-  - Users must verify email (OTP) before full access/ordering (based on your verification flow).
-
-- **Cart expiry time is environment-driven**
-  - Cart expiration is controlled by `CART_TTL_MIN` and can be changed without code edits.
-
-- **Order history must stay valid even if products change**
-  - Products can be updated/deleted by admin, but orders remain correct due to snapshots in Order items.
-
-- **Free tier hosting behavior**
-  - Render free instances. Inactivity will give a cold start. Need to wait 50 sec.
-
----
----
----
-# ✨ Core Features
-
-## 👤 User System
-- JWT Authentication
-- Email Verification via OTP
-- Secure password hashing (bcrypt)
-- Role-based access (User / Admin)
-
----
-
-## 🛒 Smart Cart System
-- Stock reservation on add-to-cart
-- Prevents overselling using atomic MongoDB updates
-- Cart expiration timer (CART_TTL_MIN)
-- Auto-release reserved stock on:
-  - Cart expiration
-  - Item removal
-  - Checkout
-- Quantity-based removal support
-- Real-time stock availability calculation:
-
-Available = stock - reserved
-
-
----
-
-## 📦 Order Management
-- Checkout converts cart → order
-- Order status lifecycle:
-  - Pending
-  - Shipped (Admin)
-  - Delivered (Admin)
-  - Cancelled (User)
-- Refund logic on cancellation
-- Monthly cancellation limit:
-  - If user cancels 5 orders in a month → ordering blocked for that month
-
----
-
-## 🛠️ Admin Panel
-- Product CRUD operations
-- Inventory management
-- View all orders
-- Update order status (Shipped / Delivered)
-- Secure admin-only routes
-- 
-<br><br>
-
-# 📁 Project Structure
-
-```plaintext
-
-MINISHOP/
-├── client/                                  # 🎨 Frontend (React + Vite)
-│   ├── src/                                 
-│   │   ├── css/                             # Styling files
-│   │   ├── pages/                           # Route-based pages
-│   │   ├── services/                        # AuthFetch and AuthContext                  
-│   │   ├── App.jsx                          # Main app component (routes setup)
-│   │   └── main.jsx                         # React entry point
-│   ├── vite.config.js                       # Vite configuration
-│   └── package.json                         # Frontend dependencies
-│
-├── server/                                  # 🚀 Backend (Express API)
-│   ├── src/                                 
-│   │   ├── config/                          # Database & environment configuration
-│   │   ├── controllers/                     # Handle HTTP requests
-│   │   ├── routes/                          # API endpoints
-│   │   ├── helpers/                         # helpers (password, hashotp, generateotp)
-│   ├   ├── jobs/                            # Expires carts & releases stock
-│   │   ├── services/                        # Business logic
-│   │   ├── models/                          # MongoDB schemas
-│   │   ├── middleware/                      # Authentication & authorization
-│   │   ├── utils/                           # luhn.js (validates credit card numbers using Luhn algorithm)
-│   │   └── index.js                         # Server entry point
-│   └── package.json                         # Backend dependencies
-│
-└── README.md                                # Project documentation
-
+```text
+available = stock - reserved
 ```
 
-<hr> <div align="center"> 
-<h2>Thank You</h2> <p>Thanks for taking the time to explore this project</p> </div>
+### 💳 Checkout & Orders
+- Transactional checkout using MongoDB transactions
+- Simulated card payment
+- Cash on Delivery
+- Shipping address stored with each order
+- Order status tracking:
+  - Pending
+  - Shipped
+  - Delivered
+  - Cancelled
+- Refund ID generated for eligible simulated-card cancellations
+- Product name, price, and image snapshots stored in orders
+- Monthly cancellation limit
 
+### 🛠️ Admin Panel
+- Add products
+- Update products
+- Delete products
+- Upload up to 6 Cloudinary images per product
+- Replace/remove existing product images
+- Manage stock
+- Set category and featured status
+- View customer orders
+- Update orders from Pending → Shipped → Delivered
 
+---
+
+## 🧱 Tech Stack
+
+| Layer | Technology |
+|---|---|
+| Frontend | React 19, Vite, React Router, CSS |
+| Backend | Node.js, Express 5 |
+| Database | MongoDB Atlas, Mongoose |
+| Authentication | JWT, bcryptjs |
+| Product Images | Cloudinary, Multer |
+| Email | Brevo Transactional Email API |
+| Hosting | Vercel |
+| Cart Cleanup | Local timer + Vercel Cron / serverless cleanup |
+
+---
+
+## 🚀 Local Installation
+
+### 1. Clone the repository
+
+```bash
+git clone https://github.com/optimas009/MiniShop.git
+```
+
+```bash
+cd MiniShop
+```
+
+### 2. Backend setup
+
+```bash
+cd server
+```
+
+```bash
+npm install
+```
+
+```bash
+npm run dev
+```
+
+Backend runs at:
+
+```text
+http://localhost:5000
+```
+
+### 3. Frontend setup
+
+Open another terminal:
+
+```bash
+cd client
+```
+
+```bash
+npm install
+```
+
+```bash
+npm run dev
+```
+
+Frontend runs at:
+
+```text
+http://localhost:5173
+```
+
+---
+
+## 🔐 Environment Variables
+
+### Backend — `server/.env`
+
+```env
+PORT=5000
+
+MONGODB_URI=your_mongodb_atlas_connection_string
+
+JWT_SECRET=your_long_random_secret
+JWT_EXPIRES_IN=1h
+
+CLIENT_URL=http://localhost:5173
+APP_BASE_URL=http://localhost:5000
+
+CART_TTL_MIN=10
+
+BREVO_API_KEY=your_brevo_api_key
+EMAIL_FROM=your_verified_brevo_email
+
+CLOUDINARY_CLOUD_NAME=your_cloud_name
+CLOUDINARY_API_KEY=your_cloudinary_api_key
+CLOUDINARY_API_SECRET=your_cloudinary_api_secret
+CLOUDINARY_PRODUCT_FOLDER=minishop/products
+
+CRON_SECRET=your_long_random_cron_secret
+```
+
+### Frontend — `client/.env`
+
+```env
+VITE_API_URL=http://localhost:5000
+```
+
+Do not commit real `.env` files or production secrets to GitHub.
+
+---
+
+## 🗄️ Main Data Models
+
+### User
+- Name and email
+- Password hash
+- Customer/Admin role
+- Email verification fields
+- Password reset fields
+- Monthly cancellation tracking
+
+### Product
+- Name
+- Price
+- Description
+- Category
+- Featured status
+- Cloudinary images
+- Stock
+- Reserved stock
+
+### Cart
+- One cart per customer
+- Product reference
+- Quantity
+- Price snapshot
+- Cart status
+- Expiry time
+
+### Order
+- Customer reference
+- Product snapshots
+- Image snapshots
+- Shipping address
+- Total
+- Payment method/status
+- Refund information
+- Fulfillment status and timestamps
+
+---
+
+## 🏗️ Key Architecture
+
+### Stock Reservation
+
+When a customer adds an item to the cart, MiniShop reserves stock using MongoDB updates. This prevents two customers from purchasing the same unavailable inventory.
+
+### Transactional Checkout
+
+Checkout uses a MongoDB transaction so stock updates, reserved-stock release, cart completion, and order creation succeed together.
+
+### Product & Order Snapshots
+
+Cart items preserve the price at reservation time. Orders preserve product name, price, and image so order history remains valid even if a product is later changed or deleted.
+
+### Cart Expiry
+
+For local development and traditional Node hosting, a timed cleanup job releases expired reservations.
+
+On Vercel, the backend does not rely on a permanently running process. Expired reservations are also cleaned during product availability requests and reservation retries, with `/api/cron/cart-expiry` available as a Vercel Cron maintenance endpoint.
+
+### Cloudinary Product Images
+
+Cloudinary handling is isolated in:
+
+```text
+server/src/cloudinary/
+├── config.js
+├── imageService.js
+└── upload.js
+```
+
+Product images are uploaded from the admin panel and stored online in Cloudinary.
+
+---
+
+## 📁 Project Structure
+
+```text
+MiniShop/
+├── client/
+│   ├── src/
+│   │   ├── components/
+│   │   ├── css/
+│   │   ├── pages/
+│   │   │   ├── admin/
+│   │   │   ├── auth/
+│   │   │   ├── cart/
+│   │   │   ├── checkout/
+│   │   │   ├── layout/
+│   │   │   ├── orders/
+│   │   │   └── products/
+│   │   ├── services/
+│   │   ├── App.jsx
+│   │   └── main.jsx
+│   ├── vercel.json
+│   └── package.json
+│
+├── server/
+│   ├── src/
+│   │   ├── cloudinary/
+│   │   ├── config/
+│   │   ├── controllers/
+│   │   ├── email/
+│   │   ├── helpers/
+│   │   ├── jobs/
+│   │   ├── middleware/
+│   │   ├── models/
+│   │   ├── routes/
+│   │   ├── services/
+│   │   ├── utils/
+│   │   └── index.js
+│   ├── vercel.json
+│   └── package.json
+│
+└── README.md
+```
+
+---
+
+## ☁️ Vercel Deployment
+
+### Backend
+
+Set the `server` directory as the Vercel project root and configure the backend environment variables in Vercel.
+
+Production values should include:
+
+```env
+CLIENT_URL=https://mini-shop-vite.vercel.app
+MONGODB_URI=...
+JWT_SECRET=...
+JWT_EXPIRES_IN=1h
+CART_TTL_MIN=10
+BREVO_API_KEY=...
+EMAIL_FROM=...
+CLOUDINARY_CLOUD_NAME=...
+CLOUDINARY_API_KEY=...
+CLOUDINARY_API_SECRET=...
+CLOUDINARY_PRODUCT_FOLDER=minishop/products
+CRON_SECRET=...
+```
+
+`PORT` is not required on Vercel.
+
+### Frontend
+
+Set the `client` directory as the frontend project root.
+
+```env
+VITE_API_URL=https://mini-shop-backend-ten.vercel.app
+```
+
+Redeploy the frontend after changing `VITE_API_URL`.
+
+---
+
+## 📌 Notes
+
+- Card payments and refunds are simulated; no real payment gateway is connected.
+- Cash on Delivery is supported.
+- MongoDB Atlas, Cloudinary, and Brevo are online services.
+- Product and inventory management are handled by the admin role.
+
+---
+
+<div align="center">
+  <h2>Thank You</h2>
+  <p>Thanks for taking the time to explore MiniShop.</p>
+</div>
