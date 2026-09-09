@@ -1,0 +1,8 @@
+{
+  "crons": [
+    {
+      "path": "/api/cron/cart-expiry",
+      "schedule": "0 0 * * *"
+    }
+  ]
+}

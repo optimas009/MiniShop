@@ -28,6 +28,11 @@ app.get("/api/health", (req, res) => {
 
 app.use("/api", apiRoutes);
 
+app.use((err, _req, res, _next) => {
+  const status = err.name === "MulterError" ? 400 : (err.status || 500);
+  res.status(status).json({ message: err.message || "Server error" });
+});
+
 (async () => {
   await connectDB();
   startCartExpiryJob();

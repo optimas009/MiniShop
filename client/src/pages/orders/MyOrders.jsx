@@ -1,208 +1,28 @@
 import { useEffect, useState } from "react";
+import { FiBox, FiCalendar, FiCreditCard, FiRefreshCw, FiRotateCcw, FiTruck } from "react-icons/fi";
 import AuthFetch from "../../services/AuthFetch";
+import ProductImage from "../../components/ProductImage";
 import "../../css/MyOrders.css";
 
-export default function MyOrders() {
-  const [orders, setOrders] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [busyId, setBusyId] = useState(null);
+const pretty = value => value ? value.charAt(0).toUpperCase()+value.slice(1) : "Unknown";
+const paymentStatusFor = order =>
+  order?.paymentMethod === "cod" && order?.status === "delivered" && order?.paymentStatus === "pending"
+    ? "paid"
+    : order?.paymentStatus;
 
-  //  modal for confirm + info 
-  const [modal, setModal] = useState({
-    open: false,
-    type: "info", 
-    title: "",
-    message: "",
-    confirmText: "OK",
-    onConfirm: null,
-  });
-
-  const closeModal = () =>
-    setModal({ open: false, type: "info", title: "", message: "", confirmText: "OK", onConfirm: null });
-
-  const openInfo = (title, message, type = "info") =>
-    setModal({ open: true, type, title, message, confirmText: "OK", onConfirm: null });
-
-  const openConfirm = (title, message, onConfirm, confirmText = "Confirm") =>
-    setModal({ open: true, type: "confirm", title, message, confirmText, onConfirm });
-
-  const load = async () => {
-    setLoading(true);
-    try {
-      const res = await AuthFetch("/api/orders/my", { method: "GET" });
-      const data = await res.json().catch(() => []);
-      if (!res.ok) throw new Error(data?.message || "Failed to load orders");
-      setOrders(Array.isArray(data) ? data : []);
-    } catch (e) {
-      openInfo("Error", e.message, "error");
-      setOrders([]);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    load();
-  }, []);
-
-  const pretty = (s) => (s ? s.charAt(0).toUpperCase() + s.slice(1) : "Unknown");
-
-  const doCancel = async (id) => {
-    try {
-      setBusyId(id);
-      const res = await AuthFetch(`/api/orders/${id}/cancel`, { method: "POST" });
-      const data = await res.json().catch(() => ({}));
-      if (!res.ok) throw new Error(data?.message || "Cancel failed");
-
-      const refundMsg =
-        data.paymentStatus === "refunded"
-          ? `Refunded  (refundId: ${data.refundId || "N/A"})`
-          : "";
-
-      openInfo(
-        "Order cancelled",
-        `Cancelled (cancelCount: ${data.cancelCount})${refundMsg ? `\n\n${refundMsg}` : ""}`,
-        "success"
-      );
-
-      await load();
-    } catch (e) {
-      openInfo("Error", e.message, "error");
-    } finally {
-      setBusyId(null);
-    }
-  };
-
-  const cancel = (id) => {
-    openConfirm("Cancel this order?", "This action cannot be undone.", async () => {
-      closeModal();
-      await doCancel(id);
-    }, "Cancel Order");
-  };
-
-  return (
-    <div className="mo-page">
-      {/*  modal */}
-      {modal.open && (
-        <div className="mo-modalOverlay" onMouseDown={closeModal}>
-          <div className="mo-modalCard" onMouseDown={(e) => e.stopPropagation()}>
-            <div className="mo-modalHead">
-              <div className="mo-modalTitle">{modal.title}</div>
-              <button className="mo-modalX" onClick={closeModal}>✕</button>
-            </div>
-
-            <div className="mo-modalBody">
-              <div className={`mo-modalMsg mo-msg-${modal.type}`}>
-                {String(modal.message || "").split("\n").map((line, i) => (
-                  <div key={i}>{line}</div>
-                ))}
-              </div>
-            </div>
-
-            <div className="mo-modalFoot">
-              {modal.type === "confirm" && (
-                <button className="mo-btn" onClick={closeModal}>Back</button>
-              )}
-              <button
-                className={`mo-btn ${modal.type === "confirm" ? "mo-btnDanger" : "mo-btnPrimary"}`}
-                onClick={modal.type === "confirm" ? modal.onConfirm : closeModal}
-              >
-                {modal.confirmText}
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-
-      <div className="mo-header">
-        <div>
-          <h1 className="mo-title">My Orders</h1>
-          <p className="mo-subtitle">Track your orders and cancel if still pending.</p>
-        </div>
-
-        <button className="mo-btn" onClick={load} disabled={loading}>
-          {loading ? "Refreshing..." : "Refresh"}
-        </button>
-      </div>
-
-      {loading && <div className="mo-muted">Loading...</div>}
-
-      <div className="mo-list">
-        {orders.map((o) => {
-          const pay = o.paymentStatus || "unknown";
-          const status = o.status || "unknown";
-
-          return (
-            <div className="mo-card" key={o._id}>
-              <div className="mo-topRow">
-                <div className="mo-leftTop">
-                  <div className="mo-kicker">Order</div>
-                  <div className="mo-idChip">{o._id}</div>
-                </div>
-
-                <div className="mo-rightTop">
-                  <span className={`mo-pill status-${status}`}>{pretty(status)}</span>
-                  <span className="mo-totalChip">Total: ${o.total}</span>
-                </div>
-              </div>
-
-              <div className="mo-mid">
-                <div className="mo-midRow">
-                  <span className="mo-strongText">Payment:</span>
-                  <span className={`mo-pill pay-${pay}`}>{pretty(pay)}</span>
-                  {o.paymentMethod ? (
-                    <span className="mo-payMeta">
-                      {o.paymentMethod}
-                      {o.paymentLast4 ? ` • **** ${o.paymentLast4}` : ""}
-                    </span>
-                  ) : null}
-                </div>
-
-                {pay === "refunded" && (o.refundId || o.refundedAt) && (
-                  <div className="mo-midRow">
-                    <span className="mo-strongText">Refund:</span>
-                    <span className="mo-refundChip">{o.refundId || "N/A"}</span>
-                    {o.refundedAt ? (
-                      <span className="mo-payMeta">{new Date(o.refundedAt).toLocaleString()}</span>
-                    ) : null}
-                  </div>
-                )}
-              </div>
-
-              <div className="mo-items">
-                {(o.items || []).map((it, idx) => (
-                  <div className="mo-item" key={idx}>
-                    <div className="mo-itemName">
-                      {it.nameSnapshot || it.product?.name || "Product"}
-                    </div>
-                    <div className="mo-itemRight">
-                      <span className="mo-itemPrice">${it.priceSnapshot}</span>
-                      <span className="mo-itemTimes">×</span>
-                      <span className="mo-itemQty">{it.qty}</span>
-                    </div>
-                  </div>
-                ))}
-              </div>
-
-              <div className="mo-actions">
-                {status === "pending" ? (
-                  <button
-                    className="mo-btn mo-btnDanger"
-                    onClick={() => cancel(o._id)}
-                    disabled={busyId === o._id}
-                  >
-                    {busyId === o._id ? "Cancelling..." : "Cancel Order"}
-                  </button>
-                ) : (
-                  <span className="mo-muted">No actions</span>
-                )}
-              </div>
-            </div>
-          );
-        })}
-
-        {!loading && orders.length === 0 && <div className="mo-empty">No orders yet.</div>}
-      </div>
-    </div>
-  );
+export default function MyOrders(){
+ const [orders,setOrders]=useState([]); const [loading,setLoading]=useState(true); const [busy,setBusy]=useState(null); const [modal,setModal]=useState(null);
+ const load=async()=>{setLoading(true);try{const res=await AuthFetch("/api/orders/my",{method:"GET"});const data=await res.json().catch(()=>[]);if(!res.ok)throw new Error(data?.message||"Could not load orders");setOrders(Array.isArray(data)?data:[]);}catch(e){setModal({title:"Orders unavailable",msg:e.message});setOrders([]);}finally{setLoading(false);}};
+ useEffect(()=>{load();},[]);
+ const cancel=async order=>{setBusy(order._id);try{const res=await AuthFetch(`/api/orders/${order._id}/cancel`,{method:"POST"});const data=await res.json().catch(()=>({}));if(!res.ok)throw new Error(data?.message||"Cancel failed");setModal({title:"Order cancelled",msg:data.paymentStatus==="refunded"?`Your payment was marked refunded. Refund reference: ${data.refundId||"N/A"}`:"The order was cancelled and reserved stock was restored."});await load();}catch(e){setModal({title:"Could not cancel",msg:e.message});}finally{setBusy(null);}};
+ return <main className="page-shell orders-page">
+  {modal&&<div className="toast-overlay" onMouseDown={()=>setModal(null)}><div className="toast-card" onMouseDown={e=>e.stopPropagation()}><h3>{modal.title}</h3><p>{modal.msg}</p><div className="toast-actions">{modal.confirm&&<button className="btn-ui secondary" onClick={()=>setModal(null)}>Keep order</button>}<button className={`btn-ui ${modal.confirm?"danger":""}`} onClick={()=>{const action=modal.confirm;if(action){setModal(null);action();}else setModal(null);}}>{modal.confirm?"Cancel order":"Done"}</button></div></div></div>}
+  <div className="orders-heading"><div><p className="eyebrow">Purchase history</p><h1 className="page-title">My orders</h1><p className="page-copy">Track fulfillment, payment state and order contents in one timeline.</p></div><button className="btn-ui secondary" onClick={load} disabled={loading}><FiRefreshCw/> Refresh</button></div>
+  {loading?<div className="order-skeleton"/>:orders.length?<div className="order-list">{orders.map(o=><article className="order-card" key={o._id}>
+   <div className="order-head"><div><span className="order-number">Order #{o._id.slice(-8).toUpperCase()}</span><span className="order-date"><FiCalendar/>{new Date(o.createdAt).toLocaleString()}</span></div><div className="order-statuses"><span className={`order-pill status-${o.status}`}>{pretty(o.status)}</span><span className={`order-pill pay-${paymentStatusFor(o)}`}>{pretty(paymentStatusFor(o))}</span></div></div>
+   <div className="order-progress"><div className={o.status!=="cancelled"?"done":""}><span><FiBox/></span><small>Placed</small></div><i/><div className={["shipped","delivered"].includes(o.status)?"done":""}><span><FiTruck/></span><small>Shipped</small></div><i/><div className={o.status==="delivered"?"done":""}><span>✓</span><small>Delivered</small></div></div>
+   <div className="order-items">{(o.items||[]).map((it,i)=><div className="order-item" key={`${o._id}-${i}`}><div className="order-item-img"><ProductImage src={it.imageSnapshot} alt={it.nameSnapshot}/></div><div><strong>{it.nameSnapshot||"Product"}</strong><small>${Number(it.priceSnapshot).toFixed(2)} × {it.qty}</small></div><b>${(Number(it.priceSnapshot)*Number(it.qty)).toFixed(2)}</b></div>)}</div>
+   <div className="order-foot"><div className="order-payment-meta">{o.shippingAddress?.city&&<span className="ship-destination">Ship to {o.shippingAddress.city}{o.shippingAddress.country?`, ${o.shippingAddress.country}`:""}</span>}<FiCreditCard/><span>{o.paymentMethod==="cod"?"Cash on delivery":`Card${o.paymentLast4?` ·•••• ${o.paymentLast4}`:""}`}</span>{o.refundId&&<span className="refund-ref"><FiRotateCcw/> {o.refundId}</span>}</div><div className="order-total"><span>Total</span><strong>${Number(o.total).toFixed(2)}</strong></div>{o.status==="pending"&&<button className="btn-ui danger" disabled={busy===o._id} onClick={()=>setModal({title:"Cancel this order?",msg:"Pending orders can be cancelled. Stock will be restored and paid card orders receive a simulated refund.",confirm:()=>cancel(o)})}>{busy===o._id?"Cancelling…":"Cancel order"}</button>}</div>
+  </article>)}</div>:<div className="empty-state"><FiBox/><h3>No orders yet</h3><p>Your completed checkouts will appear here.</p></div>}
+ </main>;
 }

@@ -9,6 +9,27 @@ const currentMonthKey = () => {
   return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}`;
 };
 
+const normalizeShippingAddress = (address = {}) => {
+  const clean = {
+    fullName: String(address.fullName || "").trim(),
+    phone: String(address.phone || "").trim(),
+    addressLine1: String(address.addressLine1 || "").trim(),
+    addressLine2: String(address.addressLine2 || "").trim(),
+    city: String(address.city || "").trim(),
+    postalCode: String(address.postalCode || "").trim(),
+    country: String(address.country || "").trim(),
+  };
+
+  const missing = ["fullName", "phone", "addressLine1", "city", "country"].filter((key) => !clean[key]);
+  if (missing.length) {
+    const err = new Error("Complete delivery details are required");
+    err.status = 400;
+    throw err;
+  }
+
+  return clean;
+};
+
 async function ensureCancelCounterFresh(userId, session) {
   const month = currentMonthKey();
 
@@ -28,7 +49,7 @@ async function ensureCancelCounterFresh(userId, session) {
   return user;
 }
 
-exports.checkoutAndCreateOrder = async ({ userId, paymentMethod, paymentId, paymentLast4 }) => {
+exports.checkoutAndCreateOrder = async ({ userId, paymentMethod, paymentId, paymentLast4, shippingAddress }) => {
 
   const session = await mongoose.startSession();
 
@@ -36,7 +57,8 @@ exports.checkoutAndCreateOrder = async ({ userId, paymentMethod, paymentId, paym
     let createdOrder;
 
     await session.withTransaction(async () => {
-      //payment validation FIRST
+      // Validate delivery snapshot and payment before touching stock.
+      const deliveryAddress = normalizeShippingAddress(shippingAddress);
       const method = paymentMethod || "card_sim";
 
       if (method === "card_sim") {
@@ -110,6 +132,7 @@ exports.checkoutAndCreateOrder = async ({ userId, paymentMethod, paymentId, paym
           product: p._id,
           nameSnapshot: p.name,
           priceSnapshot: p.price,
+          imageSnapshot: p.images?.[0]?.url || null,
           qty,
         });
 
@@ -142,6 +165,7 @@ exports.checkoutAndCreateOrder = async ({ userId, paymentMethod, paymentId, paym
             user: userId,
             items: orderItems,
             total,
+            shippingAddress: deliveryAddress,
 
             paymentMethod: method,
             paymentId: paymentId || null,
@@ -292,7 +316,16 @@ exports.adminUpdateStatus = async ({ orderId, nextStatus }) => {
 
   order.status = nextStatus;
   if (nextStatus === "shipped") order.shippedAt = new Date();
-  if (nextStatus === "delivered") order.deliveredAt = new Date();
+  if (nextStatus === "delivered") {
+    order.deliveredAt = new Date();
+
+    // Cash on delivery is collected when the order is delivered.
+    // Keep order/payment states in sync so customers never see
+    // a confusing "Delivered / Pending" combination.
+    if (order.paymentMethod === "cod" && order.paymentStatus === "pending") {
+      order.paymentStatus = "paid";
+    }
+  }
 
   await order.save();
   return order;

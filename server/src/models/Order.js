@@ -5,7 +5,21 @@ const orderItemSchema = new mongoose.Schema(
     product: { type: mongoose.Schema.Types.ObjectId, ref: "Product", required: true },
     nameSnapshot: { type: String, required: true },
     priceSnapshot: { type: Number, required: true, min: 0 },
+    imageSnapshot: { type: String, default: null },
     qty: { type: Number, required: true, min: 1 },
+  },
+  { _id: false }
+);
+
+const shippingAddressSchema = new mongoose.Schema(
+  {
+    fullName: { type: String, default: "" },
+    phone: { type: String, default: "" },
+    addressLine1: { type: String, default: "" },
+    addressLine2: { type: String, default: "" },
+    city: { type: String, default: "" },
+    postalCode: { type: String, default: "" },
+    country: { type: String, default: "" },
   },
   { _id: false }
 );
@@ -16,6 +30,8 @@ const orderSchema = new mongoose.Schema(
     items: [orderItemSchema],
 
     total: { type: Number, required: true, min: 0 },
+
+    shippingAddress: { type: shippingAddressSchema, default: () => ({}) },
 
     paymentMethod: { type: String, enum: ["card_sim", "cod"], default: "card_sim" },
     paymentId: { type: String, default: null },

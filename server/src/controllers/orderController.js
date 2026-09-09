@@ -2,13 +2,14 @@ const orderService = require("../services/orderService");
 
 exports.checkout = async (req, res) => {
   try {
-    const { paymentMethod, paymentId, paymentLast4 } = req.body || {};
+    const { paymentMethod, paymentId, paymentLast4, shippingAddress } = req.body || {};
 
     const order = await orderService.checkoutAndCreateOrder({
       userId: req.user._id,
       paymentMethod: paymentMethod || "card_sim",
       paymentId,
       paymentLast4,
+      shippingAddress,
     });
 
     res.status(201).json(order);

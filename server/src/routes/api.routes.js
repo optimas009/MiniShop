@@ -2,7 +2,8 @@ const express = require("express");
 const router = express.Router();
 
 // controllers
-const {createProduct,getProducts,updateProduct,deleteProduct} = require("../controllers/productController");
+const { createProduct, getProducts, getProductById, updateProduct, deleteProduct } = require("../controllers/productController");
+const { uploadProductImages } = require("../cloudinary/upload");
 
 const {register,loginCustomer,loginAdmin,me,verifyEmail,resendVerifyCode,forgotPassword,resetPassword} 
 = require("../controllers/authController");
@@ -15,11 +16,16 @@ const paymentController = require("../controllers/paymentController");
 const orderController = require("../controllers/orderController");
 
 const adminOrderController = require("../controllers/adminOrderController");
+const cronController = require("../controllers/cronController");
 
 
 // middleware
 const { authRequired, requireAdmin } = require("../middleware/auth");
 const { requireCustomer } = require("../middleware/roles");
+
+
+// ================= MAINTENANCE / VERCEL CRON =================
+router.get("/cron/cart-expiry", cronController.cleanupExpiredCartReservations);
 
 
 // ================= AUTH =================
@@ -35,8 +41,9 @@ router.post("/auth/reset-password", resetPassword);
 
 // ================= PRODUCTS =================
 router.get("/products", getProducts);
-router.post("/products", authRequired, requireAdmin, createProduct);
-router.put("/products/:id", authRequired, requireAdmin, updateProduct);
+router.get("/products/:id", getProductById);
+router.post("/products", authRequired, requireAdmin, uploadProductImages.array("images", 6), createProduct);
+router.put("/products/:id", authRequired, requireAdmin, uploadProductImages.array("images", 6), updateProduct);
 router.delete("/products/:id", authRequired, requireAdmin, deleteProduct);
 
 // ================= CART (CUSTOMER ONLY) =================

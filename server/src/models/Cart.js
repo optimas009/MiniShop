@@ -19,4 +19,7 @@ const cartSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
+// Speeds up serverless/cron lookup of reservations that need to be released.
+cartSchema.index({ status: 1, expiresAt: 1 });
+
 module.exports = mongoose.model("Cart", cartSchema);

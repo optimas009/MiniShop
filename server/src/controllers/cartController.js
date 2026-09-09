@@ -1,5 +1,6 @@
 const Cart = require("../models/Cart");
 const Product = require("../models/Product");
+const { cleanupExpiredCartById, cleanupExpiredCarts } = require("../services/cartCleanupService");
 
 const CART_TTL_MIN = Number(process.env.CART_TTL_MIN);
 
@@ -56,12 +57,10 @@ exports.getMyCart = async (req, res) => {
 
     if (!cart) return res.json({ items: [], expiresAt: null });
 
-    // if expired -> auto clear + release
+    // If expired, release through the transactional cleanup path so a
+    // simultaneous Vercel cron/catalog request cannot release it twice.
     if (cart.status === "active" && cart.expiresAt < new Date()) {
-      await releaseCartReserved(cart);
-      cart.items = [];
-      cart.status = "expired";
-      await cart.save();
+      await cleanupExpiredCartById(cart._id);
       return res.json({ items: [], expiresAt: null });
     }
 
@@ -71,7 +70,7 @@ exports.getMyCart = async (req, res) => {
 
     const populated = await Cart.findById(cart._id).populate(
       "items.product",
-      "name price stock reserved"
+      "name price stock reserved images category"
     );
 
     return res.json(populated);
@@ -103,10 +102,10 @@ exports.addItem = async (req, res) => {
       });
     }
 
-    // 2) If cart expired -> release reserved + clear
+    // 2) If cart expired -> transactionally release reserved + clear.
     if (cart.status === "active" && cart.expiresAt < new Date()) {
-      await releaseCartReserved(cart);
-      cart.items = [];
+      await cleanupExpiredCartById(cart._id);
+      cart = await Cart.findById(cart._id);
     }
 
     // find existing qty in cart
@@ -119,7 +118,7 @@ exports.addItem = async (req, res) => {
 
     // 3) ATOMIC reserve on Product no overselling
 
-    const reservedRes = await Product.updateOne(
+    const tryReserve = () => Product.updateOne(
       {
         _id: productId,
         $expr: {
@@ -132,6 +131,15 @@ exports.addItem = async (req, res) => {
       { $inc: { reserved: addQty } }
     );
 
+    let reservedRes = await tryReserve();
+
+    // On serverless hosting another customer's expired cart may still be
+    // holding stock until maintenance runs. Clean expired reservations and
+    // retry once before reporting that inventory is unavailable.
+    if (reservedRes.modifiedCount !== 1) {
+      await cleanupExpiredCarts({ limit: 100 });
+      reservedRes = await tryReserve();
+    }
 
     if (reservedRes.modifiedCount !== 1) {
       return res.status(400).json({ message: "Not enough stock available" });
@@ -188,12 +196,9 @@ exports.removeItem = async (req, res) => {
     let cart = await Cart.findOne({ user: userId });
     if (!cart) return res.json({ ok: true });
 
-    // expired -> release all
+    // Expired carts use the same transaction-safe cleanup as cron/catalog.
     if (cart.status === "active" && cart.expiresAt < new Date()) {
-      await releaseCartReserved(cart);
-      cart.items = [];
-      cart.status = "expired";
-      await cart.save();
+      await cleanupExpiredCartById(cart._id);
       return res.json({ ok: true });
     }
 
@@ -232,6 +237,11 @@ exports.clearMyCart = async (req, res) => {
   try {
     const cart = await Cart.findOne({ user: req.user._id });
     if (!cart) return res.json({ ok: true });
+
+    if (cart.status === "active" && cart.expiresAt < new Date()) {
+      await cleanupExpiredCartById(cart._id);
+      return res.json({ ok: true });
+    }
 
     await releaseCartReserved(cart);
 

@@ -1,198 +1,34 @@
-.navbar {
-  position: sticky;
-  top: 0;
-  z-index: 1000;
-  background: #fff;
-  border-bottom: 1px solid #eaeaea;
-}
-
-/* full width bar with padding */
-.nav-container {
-  position: relative;
-  width: 100%;
-  padding: 12px 20px;
-  height: 56px;
-  display: block; 
-}
-
-/* LEFT pinned wrapper */
-.nav-left {
-  position: absolute;
-  left: 20px;
-  top: 50%;
-  transform: translateY(-50%);
-  display: flex;
-  align-items: center;
-}
-
-/* Logo pinned */
-.logo {
-  font-size: 20px;
-  font-weight: 900;
-  text-decoration: none;
-  color: #111;
-  white-space: nowrap;
-  letter-spacing: -0.3px;
-}
-
-.logo:hover {
-  opacity: 0.9;
-}
-
-/* CENTER always centered */
-.nav-center {
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%);
-
-  list-style: none;
-  display: flex;
-  align-items: center;
-  gap: 22px;
-  margin: 0;
-  padding: 0;
-  white-space: nowrap;
-}
-
-.nav-center a {
-  text-decoration: none;
-  font-weight: 700;
-  color: #222;
-  padding: 6px 10px;
-  border-radius: 10px;
-  transition: background 0.15s ease, color 0.15s ease;
-}
-
-.nav-center a:hover {
-  background: #f3f4f6;
-  color: #111;
-}
-
-/* RIGHT pinned */
-.nav-right {
-  position: absolute;
-  right: 20px;
-  top: 50%;
-  transform: translateY(-50%);
-
-  list-style: none;
-  display: flex;
-  align-items: center;
-  gap: 12px; 
-  margin: 0;
-  padding: 0;
-  white-space: nowrap;
-}
-
-/* Cart (more visible) */
-.cart-link {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-
-  padding: 6px 12px;
-  border-radius: 12px;
-
-  background: #ddf3e9;
-  border: 1px solid #000000;
-
-  font-weight: 800;
-  text-decoration: none;
-  color: #111;
-
-  transition: all 0.15s ease;
-}
-
-.cart-link:hover {
-  background: #e5e7eb;
-  border-color: #d1d5db;
-}
-
-.cart-icon {
-  font-size: 18px;
-}
-
-.cart-text {
-  line-height: 1;
-}
-
-/* Login */
-.login-link {
-  text-decoration: none;
-  color: #222;
-  font-weight: 700;
-  padding: 6px 10px;
-  border-radius: 10px;
-  transition: background 0.15s ease;
-}
-
-.login-link:hover {
-  background: #f3f4f6;
-}
-
-/* Signup button */
-.btn-link {
-  padding: 8px 16px;
-  border-radius: 999px; /* pill */
-  background: #111;
-  color: #fff;
-  font-weight: 800;
-  border: none;
-  cursor: pointer;
-  text-decoration: none;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  transition: all 0.15s ease;
-}
-
-.btn-link:hover {
-  background: #000;
-  transform: translateY(-1px);
-}
-
-.btn-link:active {
-  transform: translateY(0);
-}
-
-/* Logout button (same style as signup, but as a button) */
-.logout-btn {
-  background: #111;
-}
-
-.logout-btn:hover {
-  background: #000;
-}
-
-/* mobile layout */
-@media (max-width: 768px) {
-  .nav-container {
-    height: auto;
-    padding: 12px 14px;
-  }
-
-  .nav-left,
-  .nav-right,
-  .nav-center {
-    position: static;
-    transform: none;
-  }
-
-  .nav-container {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: 10px;
-  }
-
-  .nav-center {
-    width: 100%;
-    justify-content: center;
-    flex-wrap: wrap;
-  }
-
-  .nav-right {
-    margin-left: auto;
-  }
+.nav-placeholder { height: 74px; }
+.site-nav { position: sticky; top: 0; z-index: 900; background: rgba(248,247,244,.88); backdrop-filter: blur(16px); border-bottom: 1px solid rgba(226,223,216,.8); }
+.nav-shell { width: min(var(--content-max), calc(100% - var(--content-gutter))); height: 74px; margin: 0 auto; display: flex; align-items: center; gap: 32px; }
+.brand { display: inline-flex; align-items: center; gap: 10px; font: 800 19px 'Manrope'; letter-spacing: -.04em; }
+.brand-mark { width: 34px; height: 34px; border-radius: 11px; display: grid; place-items: center; background: var(--ink); color: var(--accent); font-size: 15px; }
+.nav-menu { display: flex; align-items: center; gap: 4px; flex: 1; }
+.nav-link { display: inline-flex; align-items: center; gap: 7px; padding: 10px 12px; border-radius: 999px; color: #55534e; font-weight: 650; font-size: 14px; }
+.nav-link:hover, .nav-link.active { background: #fff; color: var(--ink); }
+.nav-actions { display: flex; align-items: center; gap: 10px; }
+.nav-login { font-weight: 700; font-size: 14px; padding: 10px; }
+.nav-cta { background: var(--ink); color: #fff; padding: 11px 16px; border-radius: 999px; font-size: 14px; font-weight: 750; }
+.nav-cart-btn { min-width: 58px; padding: 4px 8px; border: 0; border-radius: 0; background: transparent; color: #2563eb; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; line-height: 1; transition: color .18s ease, transform .18s ease; }
+.nav-cart-btn svg { font-size: 28px; stroke-width: 2.1; }
+.nav-cart-btn span { font-size: 11px; font-weight: 800; letter-spacing: .02em; }
+.nav-cart-btn:hover { color: #1d4ed8; transform: translateY(-1px); }
+.nav-logout-btn { border: 0; border-radius: 0; background: transparent; color: #dc2626; display: inline-flex; align-items: center; gap: 6px; padding: 8px 4px; font: inherit; font-size: 13px; font-weight: 800; cursor: pointer; transition: color .18s ease, transform .18s ease; }
+.nav-logout-btn svg { font-size: 20px; stroke-width: 2; }
+.nav-logout-btn:hover { color: #b91c1c; transform: translateY(-1px); }
+.nav-user { display: flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 700; max-width: 160px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.nav-mobile-btn { display: none; border: 0; background: transparent; font-size: 24px; padding: 7px; }
+@media (max-width: 820px) {
+ .nav-shell { width: calc(100% - 24px); height: 68px; }
+ .nav-mobile-btn { display: grid; place-items: center; }
+ .nav-menu { display: none; position: absolute; left: 12px; right: 12px; top: 74px; flex-direction: column; align-items: stretch; background: #fff; border: 1px solid var(--line); border-radius: 20px; box-shadow: var(--shadow); padding: 10px; }
+ .nav-menu.open { display: flex; }
+ .nav-link { border-radius: 12px; }
+ .nav-user, .nav-login, .nav-cta { display: none; }
+ .nav-cart-btn { min-width: 52px; padding: 4px 6px; }
+ .nav-cart-btn svg { font-size: 25px; }
+ .nav-cart-btn span { font-size: 10px; }
+ .nav-logout-btn { padding: 7px 2px; gap: 4px; }
+ .nav-logout-btn span { font-size: 11px; }
+ .nav-logout-btn svg { font-size: 21px; }
 }

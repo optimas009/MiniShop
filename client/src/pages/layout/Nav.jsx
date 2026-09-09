@@ -1,100 +1,55 @@
-import { Link, useNavigate } from "react-router-dom";
+import { Link, NavLink, useNavigate } from "react-router-dom";
+import { useState } from "react";
+import { FiMenu, FiX, FiShoppingBag, FiUser, FiLogOut, FiPackage, FiGrid } from "react-icons/fi";
 import "../../css/Nav.css";
 import { useAuth } from "../../services/AuthContext";
 
 export default function Nav() {
   const navigate = useNavigate();
-  const { loading, isAuth, role, logout } = useAuth();
+  const { loading, isAuth, role, user, logout } = useAuth();
+  const [open, setOpen] = useState(false);
 
-  if (loading) return null;
+  if (loading) return <div className="nav-placeholder" />;
 
-  const doLogout = () => {
-    logout();
-    navigate("/products");
-  };
+  const close = () => setOpen(false);
+  const doLogout = () => { close(); logout(); navigate("/products"); };
+  const linkClass = ({ isActive }) => `nav-link ${isActive ? "active" : ""}`;
 
   return (
-    <nav className="navbar">
-      <div className="nav-container">
-        {/* LEFT */}
-        <div className="nav-left">
-          <Link to="/products" className="logo">
-            MiniShop
-          </Link>
-        </div>
+    <header className="site-nav">
+      <div className="nav-shell">
+        <Link to="/products" className="brand" onClick={close}>
+          <span className="brand-mark">M</span>
+          <span>MiniShop</span>
+        </Link>
 
-        {/* CENTER */}
-        <ul className="nav-center">
-          {!isAuth && (
-            <li>
-              <Link to="/products">Products</Link>
-            </li>
-          )}
+        <nav className={`nav-menu ${open ? "open" : ""}`}>
+          <NavLink to="/products" className={linkClass} onClick={close}>Shop</NavLink>
+          {isAuth && role === "customer" && <NavLink to="/orders" className={linkClass} onClick={close}>Orders</NavLink>}
+          {isAuth && role === "admin" && <>
+            <NavLink to="/admin/manage-products" className={linkClass} onClick={close}><FiGrid /> Products</NavLink>
+            <NavLink to="/admin/add-product" className={linkClass} onClick={close}><FiPackage /> Add product</NavLink>
+            <NavLink to="/admin/orders" className={linkClass} onClick={close}>Orders</NavLink>
+          </>}
+        </nav>
 
-          {isAuth && role === "customer" && (
-            <>
-              <li>
-                <Link to="/products">Products</Link>
-              </li>
-              <li>
-                <Link to="/orders">My Orders</Link>
-              </li>
-            </>
-          )}
-
-          {isAuth && role === "admin" && (
-            <>
-              <li>
-                <Link to="/admin/add-product">Add Product</Link>
-              </li>
-              <li>
-                <Link to="/admin/manage-products">Manage Products</Link>
-              </li>
-              <li>
-                <Link to="/admin/orders">Orders</Link>
-              </li>
-              <li>
-                <Link to="/products">Products</Link>
-              </li>
-            </>
-          )}
-        </ul>
-
-        {/* RIGHT */}
-        <ul className="nav-right">
-          {isAuth && role === "customer" && (
-            <li>
-              <Link to="/cart" className="cart-link">
-                <span className="cart-icon" aria-hidden="true">
-                  🛒
-                </span>
-                <span className="cart-text">Cart</span>
+        <div className="nav-actions">
+          {!isAuth ? <>
+            <Link to="/login" className="nav-login">Log in</Link>
+            <Link to="/signup" className="nav-cta">Create account</Link>
+          </> : <>
+            <div className="nav-user"><FiUser /><span>{user?.name || (role === "admin" ? "Admin" : "Account")}</span></div>
+            {role === "customer" && (
+              <Link to="/cart" className="nav-cart-btn" aria-label="Cart">
+                <FiShoppingBag />
+                <span>Cart</span>
               </Link>
-            </li>
-          )}
-
-          {!isAuth ? (
-            <>
-              <li>
-                <Link to="/login" className="login-link">
-                  Login
-                </Link>
-              </li>
-              <li>
-                <Link to="/signup" className="btn-link">
-                  Signup
-                </Link>
-              </li>
-            </>
-          ) : (
-            <li>
-              <button className="btn-link logout-btn" onClick={doLogout}>
-                Logout
-              </button>
-            </li>
-          )}
-        </ul>
+            )}
+            <button className="nav-logout-btn" onClick={doLogout} aria-label="Logout"><FiLogOut /><span>Logout</span></button>
+          </>}
+          <button className="nav-mobile-btn" onClick={() => setOpen(v => !v)} aria-label="Toggle menu">{open ? <FiX /> : <FiMenu />}</button>
+        </div>
       </div>
-    </nav>
+    </header>
   );
 }
