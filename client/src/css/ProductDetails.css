@@ -1,8 +1,8 @@
 .back-link { border:0; background:transparent; display:inline-flex; align-items:center; gap:8px; font-weight:800; margin-bottom:24px; padding:0; }
-.detail-grid { display:grid; grid-template-columns:minmax(0,1.1fr) minmax(380px,.9fr); gap:48px; align-items:start; }
-.gallery-panel { min-width:0; }
-.main-product-image { aspect-ratio:1/1; border-radius:28px; overflow:hidden; background:#ece9e1; border:1px solid var(--line); }
-.main-product-image img { width:100%; height:100%; object-fit:cover; }
+.detail-grid { display:grid; grid-template-columns:minmax(0,620px) minmax(380px,1fr); gap:clamp(40px,5vw,80px); align-items:start; }
+.gallery-panel { min-width:0; width:100%; max-width:620px; }
+.main-product-image { width:100%; height:clamp(420px,38vw,580px); border-radius:28px; overflow:hidden; background:#ece9e1; border:1px solid var(--line); display:grid; place-items:center; padding:24px; }
+.main-product-image img { width:100%; height:100%; object-fit:contain; }
 .thumb-row { display:flex; gap:10px; margin-top:12px; overflow-x:auto; padding-bottom:4px; }
 .thumb-row button { width:76px; height:76px; border:2px solid transparent; border-radius:14px; overflow:hidden; padding:0; background:#eee; flex:0 0 auto; }
 .thumb-row button.active { border-color:var(--ink); }
@@ -24,4 +24,4 @@
 .detail-benefits span { display:flex; flex-direction:column; gap:3px; }
 .detail-benefits small { color:var(--muted); }
 .details-loading { min-height:600px; border-radius:28px; background:#eceae4; }
-@media(max-width:800px){.detail-grid{grid-template-columns:1fr;gap:20px}.detail-info{position:static}.main-product-image{border-radius:20px}}
+@media(max-width:800px){.detail-grid{grid-template-columns:1fr;gap:20px}.gallery-panel{max-width:none}.detail-info{position:static}.main-product-image{height:clamp(320px,80vw,460px);border-radius:20px;padding:16px}}

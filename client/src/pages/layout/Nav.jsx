@@ -18,10 +18,10 @@ export default function Nav() {
   return (
     <header className="site-nav">
       <div className="nav-shell">
-        <Link to="/products" className="brand" onClick={close}>
+        <a href="/products" className="brand" onClick={close}>
           <span className="brand-mark">M</span>
           <span>MiniShop</span>
-        </Link>
+        </a>
 
         <nav className={`nav-menu ${open ? "open" : ""}`}>
           <NavLink to="/products" className={linkClass} onClick={close}>Shop</NavLink>
