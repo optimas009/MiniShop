@@ -17,18 +17,94 @@
 .nav-logout-btn svg { font-size: 20px; stroke-width: 2; }
 .nav-logout-btn:hover { color: #b91c1c; transform: translateY(-1px); }
 .nav-user { display: flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 700; max-width: 160px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.nav-mobile-btn { display: none; border: 0; background: transparent; font-size: 24px; padding: 7px; }
+.nav-mobile-btn { display: none; border: 0; background: transparent; color: var(--ink); font-size: 28px; padding: 6px; cursor: pointer; }
+.nav-mobile-only { display: none; }
+
 @media (max-width: 820px) {
- .nav-shell { width: calc(100% - 24px); height: 68px; }
- .nav-mobile-btn { display: grid; place-items: center; }
- .nav-menu { display: none; position: absolute; left: 12px; right: 12px; top: 74px; flex-direction: column; align-items: stretch; background: #fff; border: 1px solid var(--line); border-radius: 20px; box-shadow: var(--shadow); padding: 10px; }
- .nav-menu.open { display: flex; }
- .nav-link { border-radius: 12px; }
- .nav-user, .nav-login, .nav-cta { display: none; }
- .nav-cart-btn { min-width: 52px; padding: 4px 6px; }
- .nav-cart-btn svg { font-size: 25px; }
- .nav-cart-btn span { font-size: 10px; }
- .nav-logout-btn { padding: 7px 2px; gap: 4px; }
- .nav-logout-btn span { font-size: 11px; }
- .nav-logout-btn svg { font-size: 21px; }
+  .nav-shell { width: calc(100% - 24px); height: 68px; gap: 16px; }
+
+  .nav-actions { margin-left: auto; }
+  .nav-mobile-btn { display: grid; place-items: center; }
+
+  /* Keep account actions in the mobile menu; Cart stays visible beside it. */
+  .nav-actions > .nav-login,
+  .nav-actions > .nav-cta,
+  .nav-actions > .nav-user,
+  .nav-actions > .nav-logout-btn {
+    display: none;
+  }
+
+  /* Keep the customer cart visible outside the mobile hamburger. */
+  .nav-actions > .nav-cart-btn {
+    display: flex;
+    min-width: 48px;
+    padding: 2px 4px;
+  }
+
+  .nav-actions > .nav-cart-btn svg { font-size: 25px; }
+  .nav-actions > .nav-cart-btn span { font-size: 10px; }
+
+  .nav-menu {
+    display: none;
+    position: absolute;
+    left: 12px;
+    right: 12px;
+    top: 76px;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 4px;
+    background: #fff;
+    border: 1px solid var(--line);
+    border-radius: 18px;
+    box-shadow: var(--shadow);
+    padding: 10px;
+  }
+
+  .nav-menu.open { display: flex; }
+
+  .nav-link {
+    width: 100%;
+    border-radius: 10px;
+    padding: 12px 13px;
+    font-size: 14px;
+  }
+
+  .nav-mobile-only { display: block; }
+
+  .nav-mobile-account-links {
+    border-top: 1px solid var(--line);
+    margin-top: 5px;
+    padding-top: 5px;
+  }
+
+  .nav-mobile-menu-link {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    border: 0;
+    background: transparent;
+    color: #55534e;
+    border-radius: 10px;
+    padding: 12px 13px;
+    font: inherit;
+    font-size: 14px;
+    font-weight: 650;
+    text-align: left;
+    cursor: pointer;
+  }
+
+  .nav-mobile-menu-link:hover { background: #f5f4f1; color: var(--ink); }
+  .nav-mobile-menu-link svg { font-size: 18px; flex: 0 0 auto; }
+  .nav-mobile-create { font-weight: 800; color: var(--ink); }
+  .nav-mobile-logout { color: #dc2626; font-weight: 800; }
+  .nav-mobile-logout:hover { color: #b91c1c; }
+}
+
+@media (max-width: 520px) {
+  .nav-shell { width: calc(100% - 20px); gap: 12px; }
+  .brand { gap: 8px; font-size: 18px; }
+  .brand-mark { width: 32px; height: 32px; border-radius: 10px; }
+  .nav-actions { margin-left: auto; gap: 4px; }
+  .nav-menu { left: 10px; right: 10px; top: 74px; }
 }
