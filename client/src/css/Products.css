@@ -29,11 +29,12 @@
 .product-image-placeholder svg { font-size:28px; }
 .featured-pill,.stock-dot { position:absolute; top:12px; border-radius:999px; padding:7px 10px; font-size:11px; font-weight:800; backdrop-filter:blur(8px); }
 .featured-pill { left:12px; background:rgba(214,255,75,.9); display:flex; align-items:center; gap:5px; }
-.stock-dot { right:12px; background:rgba(255,255,255,.88); }
-.stock-dot.out { color:var(--danger); }
+.stock-dot { right:12px; }
+.stock-dot.in { color:#15803d; background:rgba(236,253,243,.96); }
+.stock-dot.out { color:var(--danger); background:rgba(255,240,238,.96); }
 .product-card-body { padding:15px 16px 16px; display:flex; flex:1; flex-direction:column; }
 .product-meta-line { display:flex; justify-content:space-between; gap:12px; color:var(--muted); font-size:12px; text-transform:uppercase; letter-spacing:.08em; font-weight:800; }
-.product-meta-line strong { color:var(--ink); letter-spacing:0; font-size:14px; }
+.product-meta-line strong { color:var(--price-accent); letter-spacing:-.02em; font:800 19px 'Manrope'; }
 .product-card h3 { font:800 19px 'Manrope'; letter-spacing:-.035em; margin:10px 0 7px; cursor:pointer; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; min-height:46px; }
 .product-description-wrap { min-height:64px; display:flex; flex-direction:column; align-items:flex-start; }
 .product-card p { color:var(--muted); line-height:1.5; font-size:13px; margin:0; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; }

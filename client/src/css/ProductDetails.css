@@ -98,9 +98,11 @@
   margin: 12px 0 16px;
 }
 
-.detail-price { font: 800 28px 'Manrope'; }
+.detail-price { color:var(--price-accent); font:800 30px 'Manrope'; letter-spacing:-.025em; }
 .detail-desc { color: var(--muted); line-height: 1.75; font-size: 16px; margin: 22px 0; }
-.availability-line { display:flex; align-items:center; gap:9px; padding:14px 0; border-top:1px solid var(--line); border-bottom:1px solid var(--line); font-weight:700; }
+.availability-line { display:flex; align-items:center; gap:9px; padding:14px 0; border-top:1px solid var(--line); border-bottom:1px solid var(--line); font-weight:800; }
+.availability-line.in { color:#15803d; }
+.availability-line.out { color:var(--danger); }
 .buy-box { display:grid; grid-template-columns:auto 1fr; gap:12px; margin:20px 0; }
 .quantity-stepper { display:flex; align-items:center; border:1px solid var(--line); border-radius:999px; background:#fff; overflow:hidden; }
 .quantity-stepper button { width:42px; height:48px; border:0; background:transparent; display:grid; place-items:center; }
